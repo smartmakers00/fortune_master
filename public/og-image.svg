@@ -1,0 +1,102 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630">
+  <defs>
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#1a0f3e;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#16123a;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#0c0a1f;stop-opacity:1" />
+    </linearGradient>
+    <radialGradient id="crystalGlow" cx="30%" cy="50%" r="40%">
+      <stop offset="0%" style="stop-color:#8b5cf6;stop-opacity:0.9" />
+      <stop offset="50%" style="stop-color:#6366f1;stop-opacity:0.5" />
+      <stop offset="100%" style="stop-color:#3b82f6;stop-opacity:0" />
+    </radialGradient>
+    <linearGradient id="goldGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#fbbf24;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#fcd34d;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#fbbf24;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="1200" height="630" fill="url(#bgGrad)"/>
+  
+  <!-- Mystical particles -->
+  <circle cx="100" cy="80" r="2" fill="#fbbf24" opacity="0.6">
+    <animate attributeName="opacity" values="0.3;0.8;0.3" dur="3s" repeatCount="indefinite"/>
+  </circle>
+  <circle cx="950" cy="120" r="2.5" fill="#a78bfa" opacity="0.7">
+    <animate attributeName="opacity" values="0.4;0.9;0.4" dur="2.5s" repeatCount="indefinite"/>
+  </circle>
+  <circle cx="200" cy="550" r="2" fill="#fbbf24" opacity="0.5">
+    <animate attributeName="opacity" values="0.2;0.7;0.2" dur="3.5s" repeatCount="indefinite"/>
+  </circle>
+  <circle cx="1050" cy="480" r="3" fill="#a78bfa" opacity="0.6">
+    <animate attributeName="opacity" values="0.3;0.8;0.3" dur="2.8s" repeatCount="indefinite"/>
+  </circle>
+  
+  <!-- Crystal Ball Glow -->
+  <ellipse cx="360" cy="315" rx="200" ry="180" fill="url(#crystalGlow)" opacity="0.4"/>
+  
+  <!-- Crystal Ball -->
+  <circle cx="280" cy="315" r="120" fill="#1e293b" stroke="#8b5cf6" stroke-width="5" opacity="0.9"/>
+  <circle cx="280" cy="315" r="115" fill="url(#crystalGlow)" opacity="0.3"/>
+  
+  <!-- Inner mystical effects -->
+  <circle cx="280" cy="295" r="70" fill="#6366f1" opacity="0.4"/>
+  <circle cx="310" cy="320" r="50" fill="#8b5cf6" opacity="0.5"/>
+  <circle cx="250" cy="280" r="30" fill="#a78bfa" opacity="0.6"/>
+  
+  <!-- Crystal Ball Stand -->
+  <ellipse cx="280" cy="450" rx="100" ry="20" fill="#78350f" opacity="0.7"/>
+  <path d="M 180 450 Q 240 480 280 485 Q 320 480 380 450 L 360 445 Q 320 465 280 468 Q 240 465 200 445 Z" fill="#92400e" opacity="0.8"/>
+  
+  <!-- Floating Tarot Cards -->
+  <g opacity="0.7">
+    <!-- Card 1 -->
+    <rect x="120" y="180" width="60" height="100" rx="5" fill="#2d1f4a" stroke="#fbbf24" stroke-width="2"/>
+    <text x="150" y="240" font-family="serif" font-size="40" fill="#fbbf24" text-anchor="middle">✦</text>
+    
+    <!-- Card 2 -->
+    <rect x="450" y="150" width="60" height="100" rx="5" fill="#2d1f4a" stroke="#a78bfa" stroke-width="2"/>
+    <text x="480" y="210" font-family="serif" font-size="40" fill="#a78bfa" text-anchor="middle">☾</text>
+    
+    <!-- Card 3 -->
+    <rect x="100" y="380" width="60" height="100" rx="5" fill="#2d1f4a" stroke="#fcd34d" stroke-width="2"/>
+    <text x="130" y="440" font-family="serif" font-size="40" fill="#fcd34d" text-anchor="middle">☀</text>
+  </g>
+  
+  <!-- Stars -->
+  <path d="M 550 100 L 555 120 L 575 125 L 555 130 L 550 150 L 545 130 L 525 125 L 545 120 Z" fill="#fbbf24" opacity="0.8"/>
+  <path d="M 900 520 L 904 535 L 919 539 L 904 543 L 900 558 L 896 543 L 881 539 L 896 535 Z" fill="#fbbf24" opacity="0.7"/>
+  <path d="M 1100 200 L 1103 210 L 1113 213 L 1103 216 L 1100 226 L 1097 216 L 1087 213 L 1097 210 Z" fill="#a78bfa" opacity="0.8"/>
+  <path d="M 750 80 L 753 88 L 761 91 L 753 94 L 750 102 L 747 94 L 739 91 L 747 88 Z" fill="#fcd34d" opacity="0.6"/>
+  
+  <!-- Main Title -->
+  <text x="750" y="260" font-family="'Noto Serif KR', serif" font-size="80" font-weight="bold" fill="url(#goldGrad)" text-anchor="middle" letter-spacing="8">
+    천명(天命) 2026
+  </text>
+  
+  <!-- Subtitle -->
+  <text x="750" y="330" font-family="'Noto Sans KR', sans-serif" font-size="32" fill="#e5e7eb" text-anchor="middle" opacity="0.95">
+    AI가 전해드리는 새해 운세
+  </text>
+  
+  <!-- Description -->
+  <text x="750" y="390" font-family="'Noto Sans KR', sans-serif" font-size="22" fill="#d1d5db" text-anchor="middle" opacity="0.8">
+    사주명리 × 타로 × 인공지능
+  </text>
+  
+  <!-- Call to Action -->
+  <rect x="630" y="440" width="240" height="60" rx="30" fill="#dc2626" opacity="0.9"/>
+  <text x="750" y="478" font-family="'Noto Sans KR', sans-serif" font-size="26" font-weight="bold" fill="#ffffff" text-anchor="middle">
+    내 운세 확인하기
+  </text>
+  
+  <!-- Decorative line -->
+  <line x1="600" y1="350" x2="900" y2="350" stroke="#fbbf24" stroke-width="2" opacity="0.3"/>
+  
+  <!-- Zodiac symbols -->
+  <text x="950" y="300" font-size="28" fill="#a78bfa" opacity="0.5">♈♉♊♋</text>
+  <text x="950" y="340" font-size="28" fill="#a78bfa" opacity="0.5">♌♍♎♏</text>
+  <text x="950" y="380" font-size="28" fill="#a78bfa" opacity="0.5">♐♑♒♓</text>
+</svg>
