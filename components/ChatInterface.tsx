@@ -11,10 +11,10 @@ interface ChatInterfaceProps {
   onEditProfile: () => void;
 }
 
-const ChatInterface: React.FC<ChatInterfaceProps> = ({ 
-  messages, 
-  onSendMessage, 
-  isLoading, 
+const ChatInterface: React.FC<ChatInterfaceProps> = ({
+  messages,
+  onSendMessage,
+  isLoading,
   streamingText,
   userProfile,
   onEditProfile
@@ -36,18 +36,18 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({
     }
   };
 
-  // 공백 최적화: mb(하단 여백) 수치를 낮추어 텍스트 밀도를 높임
+  // 공백 최적화: mb(하단 여백) 수치를 최소화하여 텍스트 밀도를 높임
   const formatContent = (text: string) => {
     if (!text) return "";
     let formatted = text
-      .replace(/### (.*?)\n/g, '<h3 class="text-yellow-400 font-black text-lg mt-2 mb-1.5 border-l-4 border-yellow-500 pl-3 tracking-tighter">$1</h3>')
+      .replace(/### (.*?)\n/g, '<h3 class="text-yellow-400 font-black text-lg mt-1 mb-0.5 border-l-4 border-yellow-500 pl-3 tracking-tighter">$1</h3>')
       .replace(/\*\*(.*?)\*\*/g, '<b class="text-orange-300 font-black">$1</b>')
-      .replace(/^- (.*?)\n/gm, '<li class="ml-4 mb-0.5 text-[16px] leading-relaxed list-disc text-gray-200">$1</li>')
-      .replace(/\n\n/g, '</p><p class="mb-1.5 leading-relaxed text-[16px] text-gray-200">')
+      .replace(/^- (.*?)\n/gm, '<li class="ml-4 mb-0 text-[16px] leading-snug list-disc text-gray-200">$1</li>')
+      .replace(/\n\n/g, '</p><p class="mb-0.5 leading-snug text-[16px] text-gray-200">')
       .replace(/\n/g, '<br/>');
 
     if (!formatted.startsWith('<h3') && !formatted.startsWith('<p')) {
-      formatted = `<p class="mb-1.5 leading-relaxed text-[16px] text-gray-200">${formatted}</p>`;
+      formatted = `<p class="mb-0.5 leading-snug text-[16px] text-gray-200">${formatted}</p>`;
     }
     return formatted;
   };
@@ -62,7 +62,7 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({
           <div className="w-2 h-2 bg-yellow-400 rounded-full animate-pulse shadow-[0_0_10px_rgba(250,204,21,0.5)]" />
           <span className="font-black text-[10px] sm:text-xs tracking-widest text-white/90 uppercase">Celestial Master</span>
         </div>
-        <div 
+        <div
           onClick={onEditProfile}
           className="flex items-center gap-2 cursor-pointer bg-white/10 hover:bg-white/20 px-3 py-1 rounded-full border border-white/10 transition-all active:scale-95"
         >
@@ -78,35 +78,34 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({
         {messages.length === 0 && !streamingText && (
           <div className="h-full flex flex-col items-center justify-center text-center p-10 space-y-6 opacity-40">
             <span className="text-5xl animate-float">✨</span>
-            <p className="text-sm font-medium tracking-tight">당신의 이름을 알려주시면<br/>2026년의 행운을 불러올게요.</p>
+            <p className="text-sm font-medium tracking-tight">당신의 이름을 알려주시면<br />2026년의 행운을 불러올게요.</p>
           </div>
         )}
-        
+
         {messages.map((msg, i) => (
           <div key={i} className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'} animate-in fade-in slide-in-from-bottom-3 duration-500`}>
-            <div className={`max-w-[92%] sm:max-w-[85%] p-4 sm:p-5 rounded-[1.5rem] shadow-xl ${
-              msg.role === 'user' 
-                ? 'bg-gradient-to-br from-red-800 to-orange-700 text-white rounded-tr-none border border-white/20 ml-6' 
+            <div className={`max-w-[92%] sm:max-w-[85%] p-4 sm:p-5 rounded-[1.5rem] shadow-xl ${msg.role === 'user'
+                ? 'bg-gradient-to-br from-red-800 to-orange-700 text-white rounded-tr-none border border-white/20 ml-6'
                 : 'bg-white/5 text-gray-100 rounded-tl-none border border-white/10 mr-6'
-            }`}>
+              }`}>
               {msg.role === 'user' ? (
                 <p className="font-bold tracking-tight text-[16px] leading-snug">{msg.content}</p>
               ) : (
-                <div 
+                <div
                   className="prose prose-invert max-w-none"
-                  dangerouslySetInnerHTML={{ __html: formatContent(msg.content) }} 
+                  dangerouslySetInnerHTML={{ __html: formatContent(msg.content) }}
                 />
               )}
             </div>
           </div>
         ))}
-        
+
         {streamingText && (
           <div className="flex justify-start">
             <div className="max-w-[92%] sm:max-w-[85%] p-4 sm:p-5 rounded-[1.5rem] rounded-tl-none bg-white/5 text-gray-100 border border-white/10 mr-6 shadow-xl">
-              <div 
+              <div
                 className="prose prose-invert max-w-none"
-                dangerouslySetInnerHTML={{ __html: formatContent(streamingText) }} 
+                dangerouslySetInnerHTML={{ __html: formatContent(streamingText) }}
               />
               <span className="inline-block w-1.5 h-4 ml-1 bg-yellow-400 animate-pulse align-middle" />
             </div>
@@ -145,9 +144,8 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({
           <button
             type="submit"
             disabled={isLoading || !input.trim() || !hasProfile}
-            className={`bg-gradient-to-br from-red-700 to-orange-600 text-white px-4 h-[52px] rounded-2xl flex items-center justify-center shadow-lg transition-all active:scale-90 flex-shrink-0 min-w-[64px] ${
-              (isLoading || !input.trim() || !hasProfile) ? 'opacity-20 grayscale' : 'hover:brightness-110 shadow-red-900/20'
-            }`}
+            className={`bg-gradient-to-br from-red-700 to-orange-600 text-white px-4 h-[52px] rounded-2xl flex items-center justify-center shadow-lg transition-all active:scale-90 flex-shrink-0 min-w-[64px] ${(isLoading || !input.trim() || !hasProfile) ? 'opacity-20 grayscale' : 'hover:brightness-110 shadow-red-900/20'
+              }`}
           >
             <span className="text-sm font-black tracking-tighter leading-none">풀이</span>
           </button>
