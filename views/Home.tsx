@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { FortuneType } from '../types';
 
 interface HomeProps {
@@ -17,6 +17,33 @@ const CATEGORIES = [
 ];
 
 const Home: React.FC<HomeProps> = ({ onSelect }) => {
+  const [copied, setCopied] = useState(false);
+
+  const handleShare = async () => {
+    const shareData = {
+      title: '2026 신년운세 마스터',
+      text: '당신의 2026년 운명을 AI로 확인하세요! 토정비결, 사주, 타로, 체질분석까지 🔮',
+      url: window.location.href
+    };
+
+    try {
+      // Web Share API 지원 확인 (주로 모바일)
+      if (navigator.share) {
+        await navigator.share(shareData);
+      } else {
+        // PC에서는 URL 복사
+        await navigator.clipboard.writeText(window.location.href);
+        setCopied(true);
+        setTimeout(() => setCopied(false), 2000);
+      }
+    } catch (error) {
+      // 에러 처리 (사용자가 취소한 경우 등)
+      if (error instanceof Error && error.name !== 'AbortError') {
+        console.error('공유 실패:', error);
+      }
+    }
+  };
+
   return (
     <div className="space-y-8">
       <section className="text-center space-y-4">
@@ -24,6 +51,21 @@ const Home: React.FC<HomeProps> = ({ onSelect }) => {
           당신의 <span className="gold-text">2026년</span>,<br />운명의 지도를 그려드립니다
         </h2>
         <p className="text-stone-400">전통의 지혜와 최첨단 AI의 만남</p>
+
+        {/* 공유 버튼 */}
+        <div className="flex justify-center pt-2">
+          <button
+            onClick={handleShare}
+            className="group flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-amber-600/20 to-amber-700/20 border border-amber-600/30 rounded-full text-amber-400 hover:from-amber-600/30 hover:to-amber-700/30 hover:border-amber-500/50 transition-all hover:scale-105 shadow-lg hover:shadow-amber-900/30"
+          >
+            <span className="text-lg group-hover:rotate-12 transition-transform">
+              {copied ? '✓' : '🔗'}
+            </span>
+            <span className="text-sm font-bold">
+              {copied ? 'URL 복사됨!' : '친구에게 공유하기'}
+            </span>
+          </button>
+        </div>
       </section>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">

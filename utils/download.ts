@@ -1,17 +1,68 @@
 
 export function downloadResultAsHtml(title: string, content: string) {
-  // Simple markdown conversion for basic tags in the downloaded file
-  const formattedContent = content
-    .replace(/^# (.*$)/gim, '<h1 style="color: #fde68a; font-family: \'Noto Serif KR\', serif; font-size: 2em; margin-bottom: 20px;">$1</h1>')
-    .replace(/^## (.*$)/gim, '<h2 style="color: #fbbf24; font-family: \'Noto Serif KR\', serif; font-size: 1.5em; margin-top: 30px; margin-bottom: 15px; border-bottom: 1px solid #444; padding-bottom: 5px;">$1</h2>')
-    .replace(/^### (.*$)/gim, '<h3 style="color: #f59e0b; font-family: \'Noto Serif KR\', serif; font-size: 1.25em; margin-top: 20px; margin-bottom: 10px;">$1</h3>')
-    .replace(/^\* (.*$)/gim, '<li style="margin-bottom: 8px;">$1</li>')
-    .replace(/^- (.*$)/gim, '<li style="margin-bottom: 8px;">$1</li>')
-    .replace(/\*\*(.*)\*\*/gim, '<strong>$1</strong>')
-    .replace(/\n\n/g, '</p><p style="margin-bottom: 15px; line-height: 1.8;">')
-    .replace(/\n/g, '<br/>');
+    const htmlContent = generateHtmlContent(title, content);
 
-  const htmlContent = `
+    const blob = new Blob([htmlContent], { type: 'text/html' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `${title.replace(/\s+/g, '_')}_2026_운세.html`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+}
+
+// HTML 파일 공유 기능 (Web Share API)
+export async function shareResultAsHtml(title: string, content: string): Promise<boolean> {
+    try {
+        const htmlContent = generateHtmlContent(title, content);
+        const blob = new Blob([htmlContent], { type: 'text/html' });
+        const fileName = `${title.replace(/\s+/g, '_')}_2026_운세.html`;
+
+        // File 객체 생성
+        const file = new File([blob], fileName, { type: 'text/html' });
+
+        // Web Share API 지원 확인
+        if (navigator.share && navigator.canShare && navigator.canShare({ files: [file] })) {
+            await navigator.share({
+                title: `${title} - 2026 운세 결과`,
+                text: `${title} 결과를 확인해보세요!`,
+                files: [file]
+            });
+            return true;
+        } else {
+            // Web Share API 미지원시 다운로드로 폴백
+            downloadResultAsHtml(title, content);
+            return false;
+        }
+    } catch (error) {
+        // 사용자가 취소하거나 에러 발생시
+        if (error instanceof Error && error.name === 'AbortError') {
+            console.log('공유 취소됨');
+        } else {
+            console.error('공유 실패:', error);
+            // 에러 발생시 다운로드로 폴백
+            downloadResultAsHtml(title, content);
+        }
+        return false;
+    }
+}
+
+// HTML 컨텐츠 생성 함수 (공통)
+function generateHtmlContent(title: string, content: string): string {
+    // Simple markdown conversion for basic tags in the downloaded file
+    const formattedContent = content
+        .replace(/^# (.*$)/gim, '<h1 style="color: #fde68a; font-family: \'Noto Serif KR\', serif; font-size: 2em; margin-bottom: 20px;">$1</h1>')
+        .replace(/^## (.*$)/gim, '<h2 style="color: #fbbf24; font-family: \'Noto Serif KR\', serif; font-size: 1.5em; margin-top: 30px; margin-bottom: 15px; border-bottom: 1px solid #444; padding-bottom: 5px;">$1</h2>')
+        .replace(/^### (.*$)/gim, '<h3 style="color: #f59e0b; font-family: \'Noto Serif KR\', serif; font-size: 1.25em; margin-top: 20px; margin-bottom: 10px;">$1</h3>')
+        .replace(/^\* (.*$)/gim, '<li style="margin-bottom: 8px;">$1</li>')
+        .replace(/^- (.*$)/gim, '<li style="margin-bottom: 8px;">$1</li>')
+        .replace(/\*\*(.*)\*\*/gim, '<strong>$1</strong>')
+        .replace(/\n\n/g, '</p><p style="margin-bottom: 15px; line-height: 1.8;">')
+        .replace(/\n/g, '<br/>');
+
+    return `
 <!DOCTYPE html>
 <html lang="ko">
 <head>
@@ -81,14 +132,4 @@ export function downloadResultAsHtml(title: string, content: string) {
 </body>
 </html>
   `;
-
-  const blob = new Blob([htmlContent], { type: 'text/html' });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url;
-  a.download = `${title.replace(/\s+/g, '_')}_2026_운세.html`;
-  document.body.appendChild(a);
-  a.click();
-  document.body.removeChild(a);
-  URL.revokeObjectURL(url);
 }

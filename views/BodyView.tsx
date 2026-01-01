@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { getFortuneText } from '../services/gemini';
 import Loading from '../components/Loading';
-import { downloadResultAsHtml } from '../utils/download';
+import { downloadResultAsHtml, shareResultAsHtml } from '../utils/download';
 import { trackFortuneUsage } from '../utils/analytics';
 
 // 설문 데이터
@@ -145,19 +145,27 @@ const BodyView: React.FC = () => {
                     </p>
                 </div>
 
-                <div className="flex flex-col sm:grid sm:grid-cols-2 gap-4">
+                <div className="flex flex-col gap-3">
                     <button
-                        onClick={() => downloadResultAsHtml(`체질 분석 결과`, result)}
-                        className="py-5 bg-green-700 text-white rounded-2xl font-bold hover:bg-green-600 transition-all flex items-center justify-center gap-2 shadow-lg"
+                        onClick={() => shareResultAsHtml(`체질 분석 결과`, result)}
+                        className="py-5 bg-gradient-to-r from-emerald-600 to-green-600 text-white rounded-2xl font-bold hover:from-emerald-500 hover:to-green-500 transition-all flex items-center justify-center gap-2 shadow-lg"
                     >
-                        <span>📥</span> 결과 저장
+                        <span>🔗</span> 결과 공유하기
                     </button>
-                    <button
-                        onClick={() => { setAnswers({}); setResult(null); }}
-                        className="py-5 bg-stone-800 text-stone-300 rounded-2xl font-bold hover:bg-stone-700 transition-all border border-white/5"
-                    >
-                        다시 분석하기
-                    </button>
+                    <div className="grid grid-cols-2 gap-3">
+                        <button
+                            onClick={() => downloadResultAsHtml(`체질 분석 결과`, result)}
+                            className="py-4 bg-green-700 text-white rounded-2xl font-bold hover:bg-green-600 transition-all flex items-center justify-center gap-2 shadow-lg"
+                        >
+                            <span>📥</span> 다운로드
+                        </button>
+                        <button
+                            onClick={() => { setAnswers({}); setResult(null); }}
+                            className="py-4 bg-stone-800 text-stone-300 rounded-2xl font-bold hover:bg-stone-700 transition-all border border-white/5"
+                        >
+                            다시 분석
+                        </button>
+                    </div>
                 </div>
             </div>
         );
