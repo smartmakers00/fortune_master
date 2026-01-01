@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#1a1a3e;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#0f0f1e;stop-opacity:1" />
+    </linearGradient>
+    <radialGradient id="glow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" style="stop-color:#8b5cf6;stop-opacity:0.8" />
+      <stop offset="50%" style="stop-color:#6366f1;stop-opacity:0.4" />
+      <stop offset="100%" style="stop-color:#3b82f6;stop-opacity:0" />
+    </radialGradient>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="512" height="512" fill="url(#bg)" rx="115"/>
+  
+  <!-- Crystal Ball Glow -->
+  <circle cx="256" cy="256" r="140" fill="url(#glow)" opacity="0.6"/>
+  
+  <!-- Crystal Ball -->
+  <circle cx="256" cy="256" r="100" fill="#1e293b" stroke="#8b5cf6" stroke-width="4"/>
+  <circle cx="256" cy="256" r="95" fill="url(#glow)" opacity="0.3"/>
+  
+  <!-- Inner mystical effect -->
+  <circle cx="256" cy="240" r="60" fill="#6366f1" opacity="0.4"/>
+  <circle cx="280" cy="260" r="40" fill="#8b5cf6" opacity="0.5"/>
+  
+  <!-- Highlight -->
+  <circle cx="230" cy="220" r="25" fill="#a78bfa" opacity="0.6"/>
+  
+  <!-- Stars -->
+  <path d="M 150 100 L 155 115 L 170 120 L 155 125 L 150 140 L 145 125 L 130 120 L 145 115 Z" fill="#fbbf24" opacity="0.8"/>
+  <path d="M 370 120 L 373 130 L 383 133 L 373 136 L 370 146 L 367 136 L 357 133 L 367 130 Z" fill="#fbbf24" opacity="0.7"/>
+  <path d="M 390 340 L 394 352 L 406 356 L 394 360 L 390 372 L 386 360 L 374 356 L 386 352 Z" fill="#fbbf24" opacity="0.8"/>
+  <path d="M 120 360 L 123 368 L 131 371 L 123 374 L 120 382 L 117 374 L 109 371 L 117 368 Z" fill="#fbbf24" opacity="0.6"/>
+  
+  <!-- Base -->
+  <ellipse cx="256" cy="370" rx="80" ry="15" fill="#78350f" opacity="0.6"/>
+  <path d="M 176 370 Q 220 390 256 395 Q 292 390 336 370 L 320 365 Q 288 375 256 378 Q 224 375 192 365 Z" fill="#92400e"/>
+</svg>
