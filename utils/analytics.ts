@@ -28,31 +28,17 @@ export async function trackFortuneUsage(type: keyof FortuneStats): Promise<void>
     stats[type]++;
     localStorage.setItem('fortune_stats', JSON.stringify(stats));
 
-    // 2. Supabase에 카운트 증가 (키-밸류 구조)
+    // 2. Supabase에 원자적 카운트 증가
     if (supabase) {
         try {
-            // 현재 값 조회
-            const { data: currentData, error: selectError } = await supabase
-                .from('fortune_master')
-                .select('count')
-                .eq('fortune_type', type)
-                .single();
+            // PostgreSQL RPC 함수 호출 (원자적 증가로 race condition 방지)
+            const { data, error } = await supabase.rpc('increment_fortune_count', {
+                p_fortune_type: type
+            });
 
-            if (selectError && selectError.code !== 'PGRST116') { // PGRST116 = 데이터 없음
-                throw selectError;
-            }
+            if (error) throw error;
 
-            const currentCount = currentData?.count || 0;
-
-            // 카운트 증가
-            const { error: updateError } = await supabase
-                .from('fortune_master')
-                .update({ count: currentCount + 1 })
-                .eq('fortune_type', type);
-
-            if (updateError) throw updateError;
-
-            console.log(`✅ 통계 기록됨: ${type} (${currentCount + 1})`);
+            console.log(`✅ 통계 기록됨: ${type} (새 카운트: ${data})`);
         } catch (error) {
             console.warn('⚠️ Supabase 통계 저장 실패 (로컬만 저장):', error);
         }

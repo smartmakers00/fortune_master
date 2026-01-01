@@ -47,5 +47,20 @@ BEFORE UPDATE ON fortune_master
 FOR EACH ROW
 EXECUTE FUNCTION update_fortune_master_timestamp();
 
+-- 원자적 카운트 증가 함수 (Race Condition 방지)
+CREATE OR REPLACE FUNCTION increment_fortune_count(p_fortune_type TEXT)
+RETURNS INTEGER AS $$
+DECLARE
+  new_count INTEGER;
+BEGIN
+  UPDATE fortune_master
+  SET count = count + 1
+  WHERE fortune_type = p_fortune_type
+  RETURNING count INTO new_count;
+  
+  RETURN new_count;
+END;
+$$ LANGUAGE plpgsql;
+
 -- ✅ 설정 완료! 테이블 확인
 SELECT * FROM fortune_master ORDER BY fortune_type;
