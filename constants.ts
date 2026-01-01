@@ -1,5 +1,7 @@
-
 import { TarotCardData, SpreadType } from './types';
+
+// Re-export from constants.tsx for easier imports
+export { SYSTEM_PROMPTS, TAROT_CARDS } from './constants.tsx';
 
 export const MAJOR_ARCANA: TarotCardData[] = [
   { id: 0, name: "바보", englishName: "The Fool", keyword: "시작, 순수", meaningUp: "새로운 시작, 모험, 무한한 가능성", meaningRev: "무모함, 부주의, 지연" },
