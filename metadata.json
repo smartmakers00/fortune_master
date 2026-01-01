@@ -1,0 +1,7 @@
+{
+  "name": "신년운세 마스터 (Fortune Master)",
+  "description": "AI-powered traditional Korean fortune telling, tarot, and face reading service.",
+  "requestFramePermissions": [
+    "camera"
+  ]
+}

@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-Y9XJ86PR00"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() { dataLayer.push(arguments); }
+    gtag('js', new Date());
+    gtag('config', 'G-Y9XJ86PR00');
+  </script>
+
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>2026 신년운세 마스터 - AI로 풀어보는 병오년 운세</title>
+
+  <!-- SEO Meta Tags -->
+  <meta name="description" content="AI로 풀어보는 2026년 병오년 신년운세 - 토정비결, 사주, 타로, 관상, 손금, 신점. 무료로 나만의 운세를 확인하세요.">
+  <meta name="keywords" content="신년운세, 2026년 운세, 병오년, 토정비결, 사주, 타로, 관상, 손금, AI 운세, 무료 운세">
+  <meta name="author" content="Fortune Master">
+
+  <!-- Open Graph / Facebook -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://fortune-master.com">
+  <meta property="og:title" content="2026 신년운세 마스터 - AI로 풀어보는 병오년 운세">
+  <meta property="og:description" content="토정비결, 사주, 타로, 관상, 손금, 신점으로 2026년 병오년 운세를 무료로 확인하세요.">
+  <meta property="og:image" content="/og-image.png">
+  <meta property="og:locale" content="ko_KR">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:url" content="https://fortune-master.com">
+  <meta name="twitter:title" content="2026 신년운세 마스터">
+  <meta name="twitter:description" content="AI로 풀어보는 2026년 병오년 신년운세 - 토정비결, 사주, 타로, 관상, 손금, 신점">
+  <meta name="twitter:image" content="/og-image.png">
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" sizes="512x512" href="/favicon.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="manifest" href="/manifest.json">
+  <meta name="theme-color" content="#fbbf24">
+
+  <script src="https://cdn.tailwindcss.com?plugins=typography"></script>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;700&family=Noto+Sans+KR:wght@300;400;500;700&display=swap"
+    rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Noto Sans KR', sans-serif;
+      background-color: #0c0a09;
+      color: #e7e5e4;
+    }
+
+    .font-serif {
+      font-family: 'Noto Serif KR', serif;
+    }
+
+    .mystic-gradient {
+      background: radial-gradient(circle at center, #1c1917 0%, #0c0a09 100%);
+    }
+
+    .gold-glow {
+      box-shadow: 0 0 15px rgba(214, 158, 46, 0.3);
+    }
+
+    .gold-text {
+      background: linear-gradient(to bottom, #fde68a, #d97706);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    @keyframes card-flip {
+      0% {
+        transform: rotateY(0deg);
+      }
+
+      100% {
+        transform: rotateY(180deg);
+      }
+    }
+
+    .animate-flip {
+      animation: card-flip 0.6s ease-in-out forwards;
+    }
+
+    /* Custom scrollbar */
+    ::-webkit-scrollbar {
+      width: 8px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: #0c0a09;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: #292524;
+      border-radius: 10px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background: #44403c;
+    }
+  </style>
+  <!-- MediaPipe for AI Detection -->
+  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@latest/vision_bundle.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/drawing_utils/drawing_utils.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/hands/hands.js"></script>
+  <link rel="stylesheet" href="/src/index.css">
+</head>
+
+<body class="mystic-gradient min-h-screen">
+  <div id="root"></div>
+  <script type="module" src="/index.tsx"></script>
+
+  <!-- Service Worker 등록 -->
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/sw.js')
+          .then(reg => console.log('✅ Service Worker registered'))
+          .catch(err => console.log('❌ SW registration failed:', err));
+      });
+    }
+  </script>
+</body>
+
+</html>

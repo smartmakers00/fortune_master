@@ -1,0 +1,22 @@
+{
+    "name": "2026 신년운세 마스터",
+    "short_name": "운세마스터",
+    "description": "AI로 풀어보는 2026년 병오년 신년운세 - 토정비결, 사주, 타로, 관상, 손금, 신점",
+    "start_url": "/",
+    "display": "standalone",
+    "background_color": "#0c0a09",
+    "theme_color": "#fbbf24",
+    "icons": [
+        {
+            "src": "/favicon.png",
+            "sizes": "512x512",
+            "type": "image/png",
+            "purpose": "any maskable"
+        },
+        {
+            "src": "/apple-touch-icon.png",
+            "sizes": "180x180",
+            "type": "image/png"
+        }
+    ]
+}
