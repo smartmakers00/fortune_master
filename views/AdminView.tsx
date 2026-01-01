@@ -1,6 +1,5 @@
-
 import React, { useState, useEffect } from 'react';
-import { getFortuneStats, resetFortuneStats, FortuneStats } from '../utils/analytics';
+import { getFortuneStats, getGlobalFortuneStats, resetGlobalFortuneStats, FortuneStats } from '../utils/analytics';
 import { supabase } from '../services/supabase';
 import type { User } from '@supabase/supabase-js';
 
@@ -10,7 +9,9 @@ const AdminView: React.FC = () => {
     const [password, setPassword] = useState('');
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
-    const [stats, setStats] = useState<FortuneStats>(getFortuneStats());
+    const [localStats, setLocalStats] = useState<FortuneStats>(getFortuneStats());
+    const [globalStats, setGlobalStats] = useState<FortuneStats | null>(null);
+    const [isLoadingStats, setIsLoadingStats] = useState(false);
 
     // 세션 확인
     useEffect(() => {
@@ -34,15 +35,30 @@ const AdminView: React.FC = () => {
         };
     }, []);
 
-    // 통계 업데이트
+    // 전역 통계 로드
     useEffect(() => {
         if (user) {
+            loadGlobalStats();
             const interval = setInterval(() => {
-                setStats(getFortuneStats());
-            }, 1000);
+                setLocalStats(getFortuneStats());
+                loadGlobalStats();
+            }, 5000); // 5초마다 갱신
             return () => clearInterval(interval);
         }
     }, [user]);
+
+    // 전역 통계 로드
+    const loadGlobalStats = async () => {
+        setIsLoadingStats(true);
+        try {
+            const stats = await getGlobalFortuneStats();
+            setGlobalStats(stats);
+        } catch (error) {
+            console.error('전역 통계 로드 실패:', error);
+        } finally {
+            setIsLoadingStats(false);
+        }
+    };
 
     const handleLogin = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -73,6 +89,7 @@ const AdminView: React.FC = () => {
         setUser(null);
         setEmail('');
         setPassword('');
+        setGlobalStats(null);
     };
 
     // Supabase 설정이 없는 경우 처리
@@ -140,7 +157,9 @@ const AdminView: React.FC = () => {
         );
     }
 
-    const total = Object.values(stats).reduce((sum, val) => sum + val, 0);
+    // 표시할 통계 (전역 우선, 없으면 로컬)
+    const displayStats = globalStats || localStats;
+    const total = Object.values(displayStats).reduce((sum, val) => sum + val, 0);
 
     const fortuneNames: Record<keyof FortuneStats, string> = {
         tojeong: '🎋 토정비결',
@@ -167,6 +186,12 @@ const AdminView: React.FC = () => {
                     <div>
                         <h2 className="text-2xl font-bold text-amber-400">운세 사용 통계</h2>
                         <p className="text-xs text-stone-500 mt-1">관리자: {user.email}</p>
+                        <div className="flex items-center gap-3 mt-2">
+                            <span className="text-xs px-2 py-1 bg-green-900/30 text-green-400 border border-green-700 rounded-md">
+                                {globalStats ? '🌐 전체 사용자 통계' : '💾 로컬 통계만 표시'}
+                            </span>
+                            {isLoadingStats && <span className="text-xs text-amber-500">⟳ 로딩중...</span>}
+                        </div>
                     </div>
                     <button
                         onClick={handleLogout}
@@ -184,7 +209,7 @@ const AdminView: React.FC = () => {
 
                 {/* 통계 차트 */}
                 <div className="space-y-4">
-                    {(Object.entries(stats) as [keyof FortuneStats, number][])
+                    {(Object.entries(displayStats) as [keyof FortuneStats, number][])
                         .sort((a, b) => b[1] - a[1]) // 사용량 많은 순으로 정렬
                         .map(([key, value]) => {
                             const percentage = total > 0 ? (value / total * 100).toFixed(1) : '0';
@@ -211,15 +236,20 @@ const AdminView: React.FC = () => {
                 {/* 통계 초기화 버튼 */}
                 <div className="mt-8 pt-6 border-t border-stone-700">
                     <button
-                        onClick={() => {
-                            if (confirm('정말 모든 통계를 초기화하시겠습니까?\n이 작업은 되돌릴 수 없습니다.')) {
-                                resetFortuneStats();
-                                setStats(getFortuneStats());
+                        onClick={async () => {
+                            if (confirm('정말 전체 사용자 통계를 초기화하시겠습니까?\n이 작업은 되돌릴 수 없습니다.')) {
+                                try {
+                                    await resetGlobalFortuneStats();
+                                    await loadGlobalStats();
+                                    alert('✅ 전체 통계가 초기화되었습니다.');
+                                } catch (error) {
+                                    alert('❌ 통계 초기화 실패. 콘솔을 확인하세요.');
+                                }
                             }
                         }}
                         className="w-full py-3 bg-red-600/20 text-red-400 border border-red-600/50 rounded-xl font-bold hover:bg-red-600/30 transition-colors"
                     >
-                        ⚠️ 통계 초기화
+                        ⚠️ 전체 통계 초기화 (Supabase DB)
                     </button>
                 </div>
             </div>
@@ -227,7 +257,8 @@ const AdminView: React.FC = () => {
             {/* 추가 정보 */}
             <div className="bg-stone-900/30 p-4 rounded-xl border border-stone-800/50">
                 <p className="text-xs text-stone-500 text-center">
-                    💡 통계는 브라우저의 로컬 저장소에 저장됩니다. 브라우저 데이터를 삭제하면 초기화됩니다.
+                    💡 전체 사용자 통계는 Supabase 데이터베이스에 익명으로 저장됩니다.<br />
+                    로컬 통계는 브라우저별로 관리되며, 전역 통계와 별도로 동작합니다.
                 </p>
             </div>
         </div>

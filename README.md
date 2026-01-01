@@ -70,8 +70,63 @@ npm install
 프로젝트 루트에 `.env.local` 파일을 생성하고 다음 내용을 추가하세요:
 
 ```env
-GEMINI_API_KEY=your_gemini_api_key_here
+# Gemini API 키 (필수)
+VITE_GEMINI_API_KEY=your_gemini_api_key_here
+
+# Supabase 설정 (선택 - 관리자 기능 및 전체 사용자 통계용)
+VITE_SUPABASE_URL=your_supabase_project_url
+VITE_SUPABASE_ANON_KEY=your_supabase_anon_key
 ```
+
+### Supabase 설정 (선택사항)
+
+관리자 로그인 및 **전체 사용자 통계 수집**을 위해서는 Supabase 설정이 필요합니다.
+
+#### 1. Supabase 프로젝트 생성
+
+1. [Supabase](https://supabase.com)에서 계정 생성 및 로그인
+2. "New Project" 클릭하여 새 프로젝트 생성
+3. 프로젝트 URL과 Anon Public Key를 복사하여 `.env.local`에 추가
+
+#### 2. 통계 테이블 생성
+
+Supabase SQL Editor에서 다음 SQL을 실행하세요:
+
+```sql
+-- 익명 사용자 통계 로그 테이블 생성
+CREATE TABLE fortune_usage_logs (
+  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+  fortune_type TEXT NOT NULL,
+  user_agent TEXT,
+  session_id TEXT,
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+-- 인덱스 생성 (성능 향상)
+CREATE INDEX idx_fortune_usage_logs_type ON fortune_usage_logs(fortune_type);
+CREATE INDEX idx_fortune_usage_logs_created_at ON fortune_usage_logs(created_at);
+
+-- RLS (Row Level Security) 비활성화 (익명 접근 허용)
+ALTER TABLE fortune_usage_logs DISABLE ROW LEVEL SECURITY;
+```
+
+#### 3. 테이블 권한 설정
+
+**중요**: 익명 사용자가 통계를 기록할 수 있도록 `INSERT` 권한을 부여하세요.
+
+```sql
+-- anon 사용자에게 INSERT 권한 부여
+GRANT INSERT ON fortune_usage_logs TO anon;
+
+-- 관리자만 조회/삭제 가능하도록 설정 (선택)
+GRANT SELECT, DELETE ON fortune_usage_logs TO authenticated;
+```
+
+#### 4. 관리자 계정 생성
+
+Supabase Dashboard > Authentication > Users에서 관리자 계정을 생성하세요. 이 계정으로 관리자 페이지에 로그인할 수 있습니다.
+
+> **참고**: Supabase 설정 없이도 앱은 정상 작동하며, 로컬 브라우저 통계만 사용됩니다.
 
 ### 개발 서버 실행
 
