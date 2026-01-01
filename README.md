@@ -15,31 +15,37 @@
 ## ✨ 주요 기능
 
 ### 🎋 토정비결
+
 - 조선시대 토정 이지함의 비결을 AI로 재해석
 - 2026년 병오년 월별 운세 제공
 - 실질적인 조언과 함께 제공
 
 ### 🌟 정통 사주
+
 - 생년월일과 출생 시간 기반 사주팔자 풀이
 - 평생운세와 2026년 특별 운세
 - 직장, 재물, 건강, 가정 등 다양한 관점 분석
 
 ### 🔮 신비 타로
+
 - 3장의 타로 카드로 2026년 조언
 - 과거-현재-미래의 흐름 해석
 - 직관적이고 따뜻한 상담 제공
 
 ### 👁️ AI 관상
+
 - 얼굴 사진 업로드를 통한 관상 분석
 - 눈, 코, 입 등 부위별 특징 해석
 - 2026년 운세와 연결된 조언
 
 ### 🖐️ AI 손금
+
 - 손바닥 사진 업로드로 손금 분석
 - 생명선, 두뇌선, 감정선 등 주요 선 해석
 - 커리어와 경제적 성취 가능성 분석
 
 ### 🔥 예리한 신점
+
 - 무속인의 직관적인 답변 스타일
 - 현실적이고 속 시원한 조언
 - 2026년 주의사항과 비방 제공
@@ -93,33 +99,40 @@ VITE_SUPABASE_ANON_KEY=your_supabase_anon_key
 Supabase SQL Editor에서 다음 SQL을 실행하세요:
 
 ```sql
--- 익명 사용자 통계 로그 테이블 생성
-CREATE TABLE fortune_usage_logs (
-  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
-  fortune_type TEXT NOT NULL,
-  user_agent TEXT,
-  session_id TEXT,
-  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+-- 키-밸류 구조의 통계 테이블 생성
+CREATE TABLE IF NOT EXISTS fortune_master (
+  fortune_type TEXT PRIMARY KEY,
+  count INTEGER DEFAULT 0,
+  updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
 
+-- 초기 데이터 삽입 (각 운세 유형별로 0으로 시작)
+INSERT INTO fortune_master (fortune_type, count) VALUES
+  ('tojeong', 0),
+  ('saju', 0),
+  ('tarot', 0),
+  ('face', 0),
+  ('palm', 0),
+  ('shaman', 0)
+ON CONFLICT (fortune_type) DO NOTHING;
+
 -- 인덱스 생성 (성능 향상)
-CREATE INDEX idx_fortune_usage_logs_type ON fortune_usage_logs(fortune_type);
-CREATE INDEX idx_fortune_usage_logs_created_at ON fortune_usage_logs(created_at);
+CREATE INDEX IF NOT EXISTS idx_fortune_master_type ON fortune_master(fortune_type);
 
 -- RLS (Row Level Security) 비활성화 (익명 접근 허용)
-ALTER TABLE fortune_usage_logs DISABLE ROW LEVEL SECURITY;
+ALTER TABLE fortune_master DISABLE ROW LEVEL SECURITY;
 ```
 
 #### 3. 테이블 권한 설정
 
-**중요**: 익명 사용자가 통계를 기록할 수 있도록 `INSERT` 권한을 부여하세요.
+**중요**: 익명 사용자가 통계를 업데이트할 수 있도록 권한을 부여하세요.
 
 ```sql
--- anon 사용자에게 INSERT 권한 부여
-GRANT INSERT ON fortune_usage_logs TO anon;
+-- anon 사용자에게 SELECT, UPDATE 권한 부여
+GRANT SELECT, UPDATE ON fortune_master TO anon;
 
--- 관리자만 조회/삭제 가능하도록 설정 (선택)
-GRANT SELECT, DELETE ON fortune_usage_logs TO authenticated;
+-- 관리자는 조회/수정/초기화 가능
+GRANT SELECT, UPDATE ON fortune_master TO authenticated;
 ```
 
 #### 4. 관리자 계정 생성
@@ -134,7 +147,7 @@ Supabase Dashboard > Authentication > Users에서 관리자 계정을 생성하�
 npm run dev
 ```
 
-브라우저에서 http://localhost:3000 을 열면 애플리케이션을 확인할 수 있습니다.
+브라우저에서 <http://localhost:3000> 을 열면 애플리케이션을 확인할 수 있습니다.
 
 ### 프로덕션 빌드
 

@@ -8,15 +8,7 @@ export interface FortuneStats {
     face: number;
     palm: number;
     shaman: number;
-}
-
-// 사용 로그 인터페이스 (Supabase DB용)
-export interface UsageLog {
-    id?: string;
-    fortune_type: keyof FortuneStats;
-    created_at?: string;
-    user_agent?: string;
-    session_id?: string;
+    body: number;
 }
 
 // 세션 ID 생성 (브라우저 세션별 고유 ID)
@@ -29,22 +21,38 @@ function getSessionId(): string {
     return sessionId;
 }
 
-// 통계 기록 (로컬 + Supabase)
+// 통계 기록 (로컬 + Supabase 키-밸류)
 export async function trackFortuneUsage(type: keyof FortuneStats): Promise<void> {
     // 1. 로컬 스토리지에 저장 (오프라인 백업)
     const stats = getFortuneStats();
     stats[type]++;
     localStorage.setItem('fortune_stats', JSON.stringify(stats));
 
-    // 2. Supabase에 익명 로그 저장
+    // 2. Supabase에 카운트 증가 (키-밸류 구조)
     if (supabase) {
         try {
-            await supabase.from('fortune_usage_logs').insert({
-                fortune_type: type,
-                user_agent: navigator.userAgent,
-                session_id: getSessionId(),
-            });
-            console.log(`✅ 통계 기록됨: ${type}`);
+            // 현재 값 조회
+            const { data: currentData, error: selectError } = await supabase
+                .from('fortune_master')
+                .select('count')
+                .eq('fortune_type', type)
+                .single();
+
+            if (selectError && selectError.code !== 'PGRST116') { // PGRST116 = 데이터 없음
+                throw selectError;
+            }
+
+            const currentCount = currentData?.count || 0;
+
+            // 카운트 증가
+            const { error: updateError } = await supabase
+                .from('fortune_master')
+                .update({ count: currentCount + 1 })
+                .eq('fortune_type', type);
+
+            if (updateError) throw updateError;
+
+            console.log(`✅ 통계 기록됨: ${type} (${currentCount + 1})`);
         } catch (error) {
             console.warn('⚠️ Supabase 통계 저장 실패 (로컬만 저장):', error);
         }
@@ -64,7 +72,7 @@ export function getFortuneStats(): FortuneStats {
     return getDefaultStats();
 }
 
-// Supabase에서 전체 통계 조회 (관리자용)
+// Supabase에서 전체 통계 조회 (관리자용 - 키-밸류 구조)
 export async function getGlobalFortuneStats(): Promise<FortuneStats> {
     if (!supabase) {
         console.warn('⚠️ Supabase 미설정 - 로컬 통계만 반환');
@@ -73,16 +81,16 @@ export async function getGlobalFortuneStats(): Promise<FortuneStats> {
 
     try {
         const { data, error } = await supabase
-            .from('fortune_usage_logs')
-            .select('fortune_type');
+            .from('fortune_master')
+            .select('fortune_type, count');
 
         if (error) throw error;
 
-        // 데이터 집계
+        // 키-밸류 데이터를 FortuneStats 형태로 변환
         const stats = getDefaultStats();
-        data?.forEach((log: UsageLog) => {
-            if (log.fortune_type in stats) {
-                stats[log.fortune_type]++;
+        data?.forEach((row: { fortune_type: keyof FortuneStats; count: number }) => {
+            if (row.fortune_type in stats) {
+                stats[row.fortune_type] = row.count || 0;
             }
         });
 
@@ -102,6 +110,7 @@ function getDefaultStats(): FortuneStats {
         face: 0,
         palm: 0,
         shaman: 0,
+        body: 0,
     };
 }
 
@@ -118,12 +127,18 @@ export async function resetGlobalFortuneStats(): Promise<void> {
     }
 
     try {
-        const { error } = await supabase
-            .from('fortune_usage_logs')
-            .delete()
-            .neq('id', '00000000-0000-0000-0000-000000000000'); // 모든 레코드 삭제
+        // 모든 카운트를 0으로 리셋
+        const fortuneTypes: (keyof FortuneStats)[] = ['tojeong', 'saju', 'tarot', 'face', 'palm', 'shaman', 'body'];
 
-        if (error) throw error;
+        for (const type of fortuneTypes) {
+            const { error } = await supabase
+                .from('fortune_master')
+                .update({ count: 0 })
+                .eq('fortune_type', type);
+
+            if (error) throw error;
+        }
+
         console.log('✅ 전체 통계 초기화 완료');
     } catch (error) {
         console.error('❌ 전체 통계 초기화 실패:', error);

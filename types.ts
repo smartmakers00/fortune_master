@@ -1,4 +1,4 @@
-export type FortuneType = 'home' | 'tojeong' | 'saju' | 'tarot' | 'face' | 'palm' | 'shaman' | 'admin';
+export type FortuneType = 'home' | 'tojeong' | 'saju' | 'tarot' | 'face' | 'palm' | 'shaman' | 'body' | 'admin';
 
 export enum SpreadType {
   TOJEONG_2026 = 'tojeong_2026',
@@ -13,7 +13,8 @@ export enum SubServiceType {
   FACE = 'face',
   PALM = 'palm',
   SHAMAN = 'shaman',
-  DREAM = 'dream'
+  DREAM = 'dream',
+  BODY = 'body'
 }
 
 export interface UserProfile {

@@ -8,6 +8,7 @@ import FaceView from './views/FaceView';
 import ShamanView from './views/ShamanView';
 import TojeongView from './views/TojeongView';
 import PalmView from './views/PalmView';
+import BodyView from './views/BodyView';
 import AdminView from './views/AdminView';
 import PWAInstallPrompt from './components/PWAInstallPrompt';
 import { FortuneType } from './types';
@@ -20,6 +21,7 @@ const App: React.FC = () => {
       case 'tojeong': return '2026 토정비결';
       case 'saju': return '정통 사주 풀이';
       case 'tarot': return '2026 타로 리딩';
+      case 'body': return '체질 분석 & 맞춤 건강';
       case 'face': return '인공지능 관상 분석';
       case 'palm': return '인공지능 손금 분석';
       case 'shaman': return '무속인 신점 상담';
@@ -34,6 +36,7 @@ const App: React.FC = () => {
       case 'tojeong': return <TojeongView />;
       case 'saju': return <SajuView />;
       case 'tarot': return <TarotView />;
+      case 'body': return <BodyView />;
       case 'face': return <FaceView />;
       case 'palm': return <PalmView />;
       case 'shaman': return <ShamanView />;

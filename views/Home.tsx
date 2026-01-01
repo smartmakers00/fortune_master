@@ -10,8 +10,9 @@ const CATEGORIES = [
   { id: 'tojeong', icon: '📜', title: '토정비결', desc: '2026년 병오년 신년 운세 비결', color: 'bg-orange-900/20' },
   { id: 'saju', icon: '📅', title: '정통 사주', desc: '생년월일로 풀어보는 평생운', color: 'bg-amber-900/20' },
   { id: 'tarot', icon: '🃏', title: '신비 타로', desc: '카드에 담긴 2026년의 조언', color: 'bg-indigo-900/20' },
-  { id: 'palm', icon: '✋', title: '인공지능 손금', desc: '손바닥에 새겨진 운명의 선', color: 'bg-cyan-900/20' },
-  { id: 'face', icon: '👁️', title: '인공지능 관상', desc: '얼굴의 길흉화복 분석', color: 'bg-emerald-900/20' },
+  { id: 'body', icon: '💪', title: '체질 분석', desc: 'AI 맞춤 다이어트 & 운동법', color: 'bg-green-900/20' },
+  { id: 'palm', icon: '✋', title: 'AI 손금', desc: '손바닥에 새겨진 운명의 선', color: 'bg-cyan-900/20' },
+  { id: 'face', icon: '👁️', title: 'AI 관상', desc: '얼굴의 길흉화복 분석', color: 'bg-emerald-900/20' },
   { id: 'shaman', icon: '🎭', title: '예리한 신점', desc: '답답한 속을 뻥 뚫어주는 일침', color: 'bg-rose-900/20' },
 ];
 
